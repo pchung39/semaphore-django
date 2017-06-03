@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title> Semaphore </title>
+    <link href='https://fonts.googleapis.com/css?family=Product+Sans:400,400i,700,700i' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+  </head>
+
+<body>
+    <div class="mainContainer">
+      <div class="headerContainer">
+        <div class="headerContent">
+          <div class="headerTitle">Semaphore</div>
+          <div class="navigationContainer">
+            <a class="navLink" id="wecomeLink" href="/welcome">Home</a>
+            <a class="navLink" id="signinLink" href="/signin">Sign In</a>
+            <a class="navLink" id="signupLink" href="/signup">Sign Up</a>
+            <a class="navLink" id="logoutLink" href="/logout">Log Out</a>
+          </div>
+        </div>
+      </div>
+
+
+      <div class='signup'>
+        <h3> Signup </h3>
+        <form class='signup_form' action="/signup/" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+
+
+            <div class='error'> {{error}} </div>
+            <button type='submit' class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+              Sign Up!
+            </button>
+          </form>
+    </div>
+    </div>
+  </body>
+</html>

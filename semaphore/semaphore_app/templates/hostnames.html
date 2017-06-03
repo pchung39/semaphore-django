@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Semaphore</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+    <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="/static/js/addInput.js" language="Javascript" type="text/javascript"></script>
+  </head>
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title">Semaphore</span>
+        <!-- Add spacer, to align navigation to the right -->
+        <div class="mdl-layout-spacer"></div>
+        <!-- Navigation. We hide it in small screens. -->
+        <nav class="mdl-navigation mdl-layout--large-screen-only">
+          <a class="mdl-navigation__link" href="/welcome">Home</a>
+          <a class="mdl-navigation__link" href="/signin">Sign In</a>
+          <a class="mdl-navigation__link" href="/signup">Sign Up</a>
+          <a class="mdl-navigation__link" href="/logout">Log Out</a>
+        </nav>
+      </div>
+    </header>
+  </div>
+
+  <style>
+    .add_hostname {
+        position:absolute;
+        top:50%;
+        left:50%;
+        padding:15px;
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+    }
+  </style>
+  <body>
+    <div class='add_hostname'>
+      <h3> Enter a Hostname to Monitor </h3>
+      <form action='/service' method="POST">
+        <div class="hostname">
+          <input class="hostnameForm" type="text" id="hostname" name='hostname'>
+          <label class="hostnameLabel" for="hostname">Hostname</label>
+        </div>
+        <div class="cloud-provider">
+          <select>
+            <option value="amazon web services">Amazon Web Services</option>
+            <option value="google cloud platform">Google Cloud Platform</option>
+            <option value="microsoft azure">Microsoft Azure</option>
+            <option value="digital ocean">Digital Ocean</option>
+          </select>
+        </div>
+        <input type="button" name="add-hostname">
+          Add this Hostname!
+        </input>
+      </form>
+      <br>
+      <p> {{ message }} </p>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Semaphore</title>
+  <link href='https://fonts.googleapis.com/css?family=Product+Sans:400,400i,700,700i' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/signin.css">
+</head>
+
+  <body>
+    <div class="mainContainer">
+      <div class="headerContainer">
+        <div class="headerContent">
+          <div class="headerTitle">Semaphore</div>
+
+          <div class="navigationContainer">
+            <a class="navLink" id="wecomeLink" href="/welcome">Home</a>
+            <a class="navLink" id="signinLink" href="/signin">Sign In</a>
+            <a class="navLink" id="signupLink" href="/signup">Sign Up</a>
+            <a class="navLink" id="logoutLink" href="/logout">Log Out</a>
+          </div>
+        </div>
+      </div>
+
+      <div class='contentContainer'>
+        <div class="signinContent">
+          <h3> Sign In </h3>
+          <form class='signin_form' action="/signin/" method="post">
+            {% csrf_token %}
+            <div class="usernameField">
+              <label class="usernameLabel" for="username">Username</label>
+              <input class="usernameInput" type="text" id="username" name='username' value= '{{username}}'>
+            </div>
+            <div class="passwordField">
+              <label class="passwordLabel" for="password">Password</label>
+              <input class="passwordInput" type="password" id="password" name='password' value= '{{password}}'>
+            </div>
+            <div class='error'> {{error}} </div>
+            <button class="submitButton">
+              Sign In!
+            </button>
+          </form>
+        </div>
+      </div>
+  </div>
+  </body>
+</html>

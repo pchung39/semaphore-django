@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Semaphore</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+</head>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Semaphore</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+      <nav class="mdl-navigation mdl-layout--large-screen-only">
+        <a class="mdl-navigation__link" href="/welcome">Home</a>
+        <a class="mdl-navigation__link" href="/signin">Sign In</a>
+        <a class="mdl-navigation__link" href="/signup">Sign Up</a>
+        <a class="mdl-navigation__link" href="/logout">Log Out</a>
+      </nav>
+    </div>
+  </header>
+</div>
+<style>
+  .ping-table {
+    position:absolute;
+    top:50%;
+    left:50%;
+    padding:15px;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
+</style>
+
+<body>
+  <div class="ping-table">
+      <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+          <thead>
+            <tr>
+              <th class="mdl-data-table__cell--non-numeric">Hostname</th>
+              <th class="mdl-data-table__cell--non-numeric">Status</th>
+              <th class="mdl-data-table__cell--non-numeric">Last Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for x in hostnames_table %}
+            <tr>
+              <td class="mdl-data-table__cell--non-numeric"> {{ x.hostname }} </td>
+              <td class="mdl-data-table__cell--non-numeric"> {{ x.status }} </td>
+              <td class="mdl-data-table__cell--non-numeric"> {{ x.update_time }} </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+  </table>
+</div>
+  </body>
+</html>

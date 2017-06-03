@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Semaphore</title>
+    <link href='https://fonts.googleapis.com/css?family=Product+Sans:400,400i,700,700i' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/manage.css">
+  </head>
+
+  <body>
+    <div class="mainContainer">
+      <div class="headerContainer">
+        <div class="headerContent">
+          <div class="headerTitle">Semaphore</div>
+          <div class="navigationContainer">
+            <a class="navLink" id="wecomeLink" href="/welcome">Home</a>
+            <a class="navLink" id="signinLink" href="/signin">Sign In</a>
+            <a class="navLink" id="signupLink" href="/signup">Sign Up</a>
+            <a class="navLink" id="logoutLink" href="/logout">Log Out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contentContainer">
+      <div class="mainContent">
+        <div class='addHostname'>
+            <div class="tableHeader" id="yellow"><p> Add New Hostname </p></div>
+            <form action='/service' method="POST">
+              <div class="hostnameField">
+                <label class="hostnameLabel" for="hostname">Hostname</label>
+                <input class="hostnameInput" type="text" id="hostname" name='hostname'>
+              </div>
+              <div class="cloud-provider">
+                <label class="cloudLabel" for="cloudSelect">Cloud Provider</label>
+                <select class="cloudSelect">
+                  <option value="-">---</option>
+                  <option value="amazon web services">Amazon Web Services</option>
+                  <option value="google cloud platform">Google Cloud Platform</option>
+                  <option value="microsoft azure">Microsoft Azure</option>
+                  <option value="digital ocean">Digital Ocean</option>
+                </select>
+              </div>
+              <input id="hostnameButton" type="button" name="add-hostname" value="Add Hostname">
+            </form>
+          <br>
+        <p> {{ message }} </p>
+        </div>
+      </div>
+        <div class="tableContainer">
+          <div class="tableHeader" id="blue"><p>Amazon Web Services</p></div>
+          <table class="full-width mdl-data-table mdl-js-data-table mdl-data-table--selectable">
+              <thead>
+                <tr>
+                  <th class="mdl-data-table__cell--non-numeric">Instance</th>
+                  <th class="mdl-data-table__cell--non-numeric">Cloud Provider</th>
+                  <th class="mdl-data-table__cell--non-numeric">Service</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for instance in instances %}
+                <tr>
+                  <td class="mdl-data-table__cell--non-numeric"> {{ instance.instance }} </td>
+                  <td class="mdl-data-table__cell--non-numeric"> {{ instance.instance_provider }} </td>
+                  <td class="mdl-data-table__cell--non-numeric"> {{ instance.provider_service }} </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+
+</html>
