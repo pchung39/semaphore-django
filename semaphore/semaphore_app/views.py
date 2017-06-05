@@ -12,7 +12,10 @@ def lander(request):
 
 def signin(request):
     if request.method == 'POST':
-        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
         if user is not None:
             login(request, user)
             return redirect('lander')
@@ -35,15 +38,30 @@ def signup(request):
         form = UserCreateForm()
     return render(request, 'signup.html', {'form': form})
 
+@login_required(login_url='/signin/')
+def manage_services(request):
+
+    aws_instances = Instance.objects.filter(user_id=request.user.id, instance_provider='Amazon Web Services').values()
+    gcp_instances = Instance.objects.filter(user_id=request.user.id, instance_provider='Google Cloud Platform').values()
+    azure_instances = Instance.objects.filter(user_id=request.user.id, instance_provider='Microsoft Azure').values()
+    return render(request, 'manage.html', { 'aws': aws_instances, 'gcp': gcp_instances, 'azure': azure_instances })
+
+
+def delete_instance(request, instance_id):
+
+    query = Instance.objects.filter(id=instance_id)
+    query.delete()
+    return redirect('manage')
+
 # TODO: make adding a hostname a pop up instead of a page
 
-'''
-@login_required
+@login_required(login_url='/signin/')
 def select_service():
     if request.method == 'POST':
-        hostname_form = request.form['hostname']
-        hostname_provider_form = request.form['hostname_provider']
-        # user_id = str(current_user.get_id())
+        instance_form = request.POST['hostname']
+        instance_provider_form = request.POST['hostname_provider']
+        provider_service_form = request.POST['provider_service']
+
 
         new_hostname = Hostname(user_id, hostname_form, hostname_provider_form)
 
@@ -58,14 +76,9 @@ def select_service():
 
     else:
         return render(request, 'hostnames.html', )
-'''
 
 
-@login_required
-def manage_services(request):
 
-    instances = Instance.objects.all().filter(user_id=request.user.id).values()
-    return render(request, 'manage.html', { 'instances': instances })
 '''
 
 @app.route('/report')

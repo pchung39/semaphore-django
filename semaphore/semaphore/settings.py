@@ -78,9 +78,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gaze',
-        'USER': 'paul',
-        'PASSWORD': 'psalm119',
-        'HOST': 'gaze.clrqv76ujq9t.us-east-1.rds.amazonaws.com',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
         'PORT': '5432',
     }
 }
