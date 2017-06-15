@@ -40,6 +40,7 @@ The second piece is the script that both checks the database for new hostnames, 
 
 Semaphore uses PostgreSQL hosted on AWS RDS, however Django's backend settings do not discriminate between a cloud or locally based database, so simply add your credentials to `django.backends` in `settings.py`
 
+```python
   DATABASES = {
       'default': {
           'ENGINE': 'django.db.backends.postgresql',
@@ -50,15 +51,15 @@ Semaphore uses PostgreSQL hosted on AWS RDS, however Django's backend settings d
           'PORT': '',
       }
   }
+```
 
-
-2. Instance
+1. Instance
   * `user_id`
   * `instance` - hostname for cloud instance
   * `instance_provider` - Amazon Web Services, Google Cloud Platform, Microsoft Azure
   * `provider_service` - Specific service used on Cloud Platform (ex. EC2, or GCP App Engine)
 
-3. Ping Results
+2. Ping Results
   * `user_id`
   * `instance`
   * `min_ping`- minimum ping latency
@@ -71,5 +72,4 @@ Semaphore uses PostgreSQL hosted on AWS RDS, however Django's backend settings d
 * `localhost:5000/`: default main page
 * `/signup`: user sign up page
 * `/signin`: user sign in page
-* `/manage`: manage your hostnames
-* `/report`: view the ping status of all the hostnames you are monitoring
+* `/manage`: manage your hostnames and view results
