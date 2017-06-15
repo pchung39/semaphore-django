@@ -3,7 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from .signup_form import UserCreateForm
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import *
 
 def lander(request):
     return render(request, 'index.html')
@@ -56,29 +60,48 @@ def delete_instance(request, instance_id):
 # TODO: make adding a hostname a pop up instead of a page
 
 @login_required(login_url='/signin/')
-def select_service():
+def select_service(request):
     if request.method == 'POST':
-        instance_form = request.POST['hostname']
-        instance_provider_form = request.POST['hostname_provider']
+        instance_form = request.POST['instance']
+        instance_provider_form = request.POST['instance_provider']
         provider_service_form = request.POST['provider_service']
 
+        new_instance = Instance(user_id=request.user.id, instance=instance_form, instance_provider=instance_provider_form, provider_service=provider_service_form)
+        new_instance.save()
 
-        new_hostname = Hostname(user_id, hostname_form, hostname_provider_form)
 
-        db.session.add(new_hostname)
-        commit = db.session.commit()
-
-        # need to add logic to deal with erroneous posts
-        # looks like it returns "None" if no errors
-
-        message = "'%s' was added to the Monitor list" % hostname_form
-        return render_template('hostnames.html', message=commit)
+        if new_instance.pk is None:
+            message.error(request, 'There was an error')
+        else:
+            instance_added = "'%s' has been added" % instance_form
+            return redirect('manage')
 
     else:
-        return render(request, 'hostnames.html', )
+        return render(request, 'manage.html')
+
+def logout(request):
+    logout(request)
+    return render(request, 'index.html')
 
 
+# GET INSTANCE
+@api_view(['GET'])
+def get_instance(request, instance_id):
+    try:
+        instance = Instance.objects.get(user_id=request.user.id, pk=instance_id)
+        serializer = InstanceSerializer(instance)
+        return Response(serializer.data)
+    except Instance.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+# GET ALL INSTANCES / POST NEW INSTANCE
+@api_view(['GET', 'POST'])
+def get_all_post_instance():
+    
+'''
+# POST new INSTANCE
+@api_view(['POST'])
+'''
 '''
 
 @app.route('/report')
@@ -148,7 +171,3 @@ def signup():
     else:
         return render_template('signup.html')
 '''
-
-def logout(request):
-    logout(request)
-    return render(request, 'index.html')

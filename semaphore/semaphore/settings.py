@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'semaphore_app',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -78,9 +79,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'gaze',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
+        'USER': 'paul',
+        'PASSWORD': 'psalm119',
+        'HOST': 'gaze.clrqv76ujq9t.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }

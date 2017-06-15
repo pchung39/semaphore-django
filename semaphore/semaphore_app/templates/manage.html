@@ -33,20 +33,25 @@
           <div id="popupclose">close</div>
         </div>
         <div id="popupForm">
+          {% if messages %}
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+          {% endif %}
           <form action='/service/' method="POST">
+            {% csrf_token %}
             <div class="cloud-provider">
-              <label class="cloudLabel" for="cloudSelect">Cloud Provider</label>
-              <select class="cloudSelect">
+              <label class="cloudLabel">Cloud Provider</label>
+              <select class="cloudSelect" name="instance_provider">
                 <option value="-">---</option>
                 <option value="Amazon Web Services">Amazon Web Services</option>
                 <option value="Google Cloud Platform">Google Cloud Platform</option>
                 <option value="Microsoft Azure">Microsoft Azure</option>
-                <option value="digital ocean">Digital Ocean</option>
               </select>
             </div>
             <div class="provider-service">
-              <label class="cloudLabel" for="cloudSelect">Cloud Service</label>
-              <select class="cloudSelect">
+              <label class="cloudLabel">Cloud Service</label>
+              <select class="cloudSelect" name="provider_service">
                 <option value="-">---</option>
                 <option value="EC2">EC2</option>
                 <option value="EBS">EBS</option>
@@ -54,7 +59,7 @@
             </div>
             <div class="hostnameField">
               <label class="hostnameLabel" for="hostname">Hostname</label>
-              <input class="hostnameInput" type="text" id="hostname" name='hostname'>
+              <input class="hostnameInput" type="text" id="hostname" name='instance'>
             </div>
             <button id="hostnameButton" type="submit" name="add-instance">Add Instance</button>
           </form>
@@ -63,6 +68,7 @@
     </div>
 
     <div class="contentContainer">
+      {{ success_message }}
       <div class="tableContainer">
         {% if aws %}
         <div class="tableHeader" id="blue"><p>Amazon Web Services</p></div>
