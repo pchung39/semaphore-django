@@ -85,19 +85,52 @@ def logout(request):
 
 
 # GET INSTANCE
-@api_view(['GET'])
-def get_instance(request, instance_id):
+@api_view(['GET', 'DELETE', 'PUT'])
+def get_put_delete_instance(request, instance_id):
+
     try:
         instance = Instance.objects.get(user_id=request.user.id, pk=instance_id)
-        serializer = InstanceSerializer(instance)
-        return Response(serializer.data)
     except Instance.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-# GET ALL INSTANCES / POST NEW INSTANCE
+    if request.method == 'GET':
+        serializer = InstanceSerializer(instance)
+        return Response(serializer.data)
+
+    if request.method == 'DELETE':
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    if request.method == 'PUT':
+        serializer = InstanceSerializer(puppy, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# GET ALL INSTANCES
 @api_view(['GET', 'POST'])
-def get_all_post_instance():
-    
+def get_all_or_post_instances(request):
+    if request.method == 'POST':
+        try:
+            serializer = InstanceSerializer(user_id=request.user.id, instance=request.POST.get('instance', ''), instance_provider=request.POST.get('instance_provider',''), provider_service=request.POST.get('provider_service', ''))
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+        except:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        try:
+            instances = Instance.objects.filter(user_id=request.user.id)
+            serializer = InstanceSerializer(instances, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Instance.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
 '''
 # POST new INSTANCE
 @api_view(['POST'])
