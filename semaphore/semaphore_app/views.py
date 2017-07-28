@@ -8,39 +8,46 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
+import jwt
+
+#JWT secret key
+SECRET_KEY = "bananas"
+
+'''
+        token = jwt.encode({
+            'id': self.pk,
+            'exp': int(dt.strftime('%s'))
+        }, settings.SECRET_KEY, algorithm='HS256')
+
+        return token.decode('utf-8')
+'''
+'''
+        jwt.decode(encoded, 'secret', algorithms=['HS256'])
+'''
+
 
 def lander(request):
     return render(request, 'index.html')
 
 # posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-
+@api_view(['POST'])
 def signin(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
+        form = UserSerializer()
+        response = form.signin(request.data)
+        token = jwt.encode({'id': response.user_id)}, SECRET_KEY, algorithm='HS256')
+        token_object = {"token": token}
 
-        if user is not None:
-            login(request, user)
-            return redirect('lander')
-        else:
-            error = 'We could not find the user'
-            return render(request, 'signin.html', {'error': error})
-    return render(request, 'signin.html')
 
+@api_view(['POST'])
 def signup(request):
     if request.method == 'POST':
-        form = UserCreateForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('lander')
-    else:
-        form = UserCreateForm()
-    return render(request, 'signup.html', {'form': form})
+        signup_form = UserSerializer()
+        response = signup_form.create(request.data)
+        token = jwt.encode({'id': response.user_id)}, SECRET_KEY, algorithm='HS256')
+        return Response(token.decode('utf-8'), status=status.HTTP_204_NO_CONTENT)
+
+
 
 @login_required(login_url='/signin/')
 def manage_services(request):
@@ -114,7 +121,9 @@ def get_put_delete_instance(request, instance_id):
 def get_all_or_post_instances(request):
     if request.method == 'POST':
         try:
-            serializer = InstanceSerializer(user_id=request.user.id, instance=request.POST.get('instance', ''), instance_provider=request.POST.get('instance_provider',''), provider_service=request.POST.get('provider_service', ''))
+            serializer = InstanceSerializer(user_id=request.user.id, instance=request.POST.get('instance', ''),
+                                            instance_provider=request.POST.get('instance_provider',''),
+                                            provider_service=request.POST.get('provider_service', ''))
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
