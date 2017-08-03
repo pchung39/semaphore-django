@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from .serializers import *
 import jwt
@@ -35,17 +36,17 @@ def signin(request):
     if request.method == 'POST':
         form = UserSerializer()
         response = form.signin(request.data)
-        token = jwt.encode({'id': response.user_id)}, SECRET_KEY, algorithm='HS256')
-        token_object = {"token": token}
-
+        token = jwt.encode({'id': response["user_id"]}, SECRET_KEY, algorithm='HS256')
+        token_object = {"token": token.decode("utf-8")}
+        return Response({"token": token.decode("utf-8")}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def signup(request):
     if request.method == 'POST':
         signup_form = UserSerializer()
         response = signup_form.create(request.data)
-        token = jwt.encode({'id': response.user_id)}, SECRET_KEY, algorithm='HS256')
-        return Response(token.decode('utf-8'), status=status.HTTP_204_NO_CONTENT)
+        token = jwt.encode({'id': response["user_id"]}, SECRET_KEY, algorithm='HS256')
+        return JsonResponse({"token": token.decode("utf-8")}, status=status.HTTP_200_OK)
 
 
 
