@@ -9,4 +9,4 @@ env:
 install:
   - pip install -r requirements.txt
 
-script: python semaphore/manage.py test
+script: python semaphore/manage.py test --keepdb 
