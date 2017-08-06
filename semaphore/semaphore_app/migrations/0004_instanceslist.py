@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import django.contrib.postgres.fields.hstore
 from django.db import migrations, models
+from django.contrib.postgres.operations import HStoreExtension
 
 
 class Migration(migrations.Migration):
@@ -13,6 +14,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        HStoreExtension(),
         migrations.CreateModel(
             name='InstancesList',
             fields=[

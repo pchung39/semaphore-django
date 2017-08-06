@@ -5,6 +5,7 @@ from threading import Thread
 import time
 import os
 from datetime import datetime
+from ping_class import Ping
 
 
 # get user id from environment variables
@@ -22,44 +23,6 @@ EXAMPLE INSTANCE API REQUEST RETURN
 '''
 
 
-class Ping:
-
-    def __init__(self, hostname, minimum, maximum, average):
-        self.hostname = hostname
-        self.min = minimum
-        self.max = maximum
-        self.avg = average
-
-    @classmethod
-    def parse_ping(cls, whole_ping_string, hostname_object):
-        cls.hostname, cls.ping = whole_ping_string.decode("utf-8").split(":")
-        cls.ping = cls.ping.strip('\n').lstrip()
-        if cls.ping.split(" ")[0] == '-':
-            cls.min = 0
-            cls.avg = 0
-            cls.max = 0
-        else:
-            cls.min, cls.avg, cls.max = map(float,cls.ping.split())
-
-        return Ping(hostname_object["id"], cls.min, cls.max, cls.avg)
-
-
-    def get_min(self):
-        return self.min
-
-    def get_max(self):
-        return self.max
-
-    def get_avg(self):
-        return self.avg
-
-    def get_hostname(self):
-        return self.hostname
-
-    def __str__(self):
-        return "<hostname_id: %s, min: %s, max: %s, avg: %s>" %(self.hostname, self.min, self.max, self.avg)
-
-
 def instances_check():
     # API CALL: GET instances for user
     instances_list = []
@@ -75,11 +38,12 @@ def instances_check():
 def ping_hostname(u):
     print('starting thread')
     ping_result = check_ping(u)
-    #store_ping_result(ping_result,u)
+    store_ping_result(ping_result)
     print('thread finished')
     #print("processed %s: %s" % (u, ping_result))
 
 def check_ping(hostname):
+
     with open(os.devnull, 'w') as DEVNULL:
         #cmd = "fping {host} -C 3 -q".format(host=hostname)
         #res = [float(x) for x in get_simple_cmd_output(cmd).strip().split(':')[-1].split() if x != '-']
@@ -91,11 +55,13 @@ def check_ping(hostname):
         return Ping.parse_ping(process, hostname)
 
 
-def store_ping_result(result,hostname_ping):
+def store_ping_result(ping_object):
 
     # pass instance id as parameter payload
-    requests.post("http://localhost:8000/api/v1/instances/", headers={"Authorization": "2"})
-    pass
+    payload = {"id": ping_object.get_hostname(), "min_ping":ping_object.get_min(), "max_ping":ping_object.get_max(), "avg_ping": ping_object.get_avg()}
+    requests.post("http://localhost:8000/api/v1/ping/{}".format(ping_object.get_hostname()), data=payload, headers={"Authorization": "2"})
+    print("successfully saved: ", ping_object.get_hostname())
+    return
 
 
 def run_threads_please(hostnames):
@@ -108,6 +74,6 @@ def run_threads_please(hostnames):
 if __name__ == '__main__':
     while True:
         instances = instances_check()
-        test = run_threads_please(instances)
+        run_threads_please(instances)
         hostnames = []
         time.sleep(60)

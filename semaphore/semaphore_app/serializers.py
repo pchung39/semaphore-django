@@ -40,3 +40,15 @@ class PingResultsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PingResults
         fields = '__all__'
+
+    def save(self, validated_data, user_id, instance_id):
+        user = User.objects.get(id=int(user_id))
+        print("data going in: ", validated_data)
+        ping = PingResults.objects.create(user=user, instance=instance_id,
+                                          min_ping=validated_data["min_ping"],
+                                          max_ping=validated_data["max_ping"],
+                                          avg_ping=validated_data["avg_ping"])
+
+        ping.save()
+        ping_object = {"status": "success"}
+        return ping_object

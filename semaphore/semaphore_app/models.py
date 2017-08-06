@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.postgres.fields import HStoreField
-
+from django.contrib.postgres.operations import HStoreExtension
 
 class Instance(models.Model):
 
@@ -25,6 +25,7 @@ class PingResults(models.Model):
 
     def __str__(self):
         return '<instace: {} , min ping: {}, average ping: {}, max ping: {}>'.format(self.instance, self.min_ping, self.avg_ping, self.max_ping)
+
 
 class InstancesList(models.Model):
 

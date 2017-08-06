@@ -35,8 +35,8 @@ def lander(request):
 @api_view(['POST'])
 def signin(request):
     if request.method == 'POST':
-        form = UserSerializer()
-        response = form.signin(request.data)
+        signin_form = UserSerializer()
+        response = signin_form.signin(request.data)
         token = jwt.encode({'id': response["user_id"]}, SECRET_KEY, algorithm='HS256')
         token_object = {"token": token.decode("utf-8")}
         return Response({"token": token.decode("utf-8")}, status=status.HTTP_200_OK)
@@ -150,11 +150,8 @@ def post_pingresults(request, instance_id):
     user_id = request.META.get('HTTP_AUTHORIZATION')
     print(user_id)
     try:
-        serializer = PingResultsSerializer(user_id=user_id, instance=instance_id, min_ping=request.POST['min_ping'], max_ping=request.POST['max_ping'],avg_ping=request.POST['avg_ping'], update_time=datetime.now())
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(seralizer.data, status=status.HTTP_200_OK)
-
+        ping_serializer = PingResultsSerializer()
+        post_ping = ping_serializer.save(request.data, user_id, instance_id)
+        return Response(post_ping, status=status.HTTP_200_OK)
     except:
         return Response(seralizer.errors, status=status.HTTP_400_BAD_REQUEST)
