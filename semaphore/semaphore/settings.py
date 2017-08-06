@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'semaphore_app',
     'rest_framework',
     'corsheaders',
@@ -87,6 +88,8 @@ WSGI_APPLICATION = 'semaphore.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+#DATABASE_ROUTERS = ['manager.router.DatabaseAppsRouter']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -94,6 +97,14 @@ DATABASES = {
         'USER': 'paul',
         'PASSWORD': 'psalm119',
         'HOST': 'gaze.clrqv76ujq9t.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
+    },
+    'instances': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'semaphore_instances',
+        'USER': 'paulchung',
+        'PASSWORD': 'psalm119',
+        'HOST': 'semaphore-instances.clrqv76ujq9t.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }

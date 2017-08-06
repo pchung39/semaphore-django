@@ -35,3 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
             return user_id_object
         else:
             return { "error": "There was an error signing in" }
+
+class PingResultsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PingResults
+        fields = '__all__'
