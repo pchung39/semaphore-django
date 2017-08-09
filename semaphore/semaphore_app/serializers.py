@@ -8,6 +8,17 @@ class InstanceSerializer(serializers.ModelSerializer):
         model = Instance
         fields = '__all__'
 
+    def save(self, validated_data, user_id):
+        user = User.objects.get(id=int(user_id))
+        ping = Instance.objects.create(user=user, instance=validated_data['instance'],
+                                       instance_provider=validated_data['instance_provider'],
+                                       provider_service=validated_data['provider_service'])
+
+        ping.save()
+        ping_object = {"status": "success"}
+        return ping_object
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -27,7 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
     def signin(self, validated_data):
         username = validated_data['username']
         password = validated_data['password']
-        user = authenticate(username=username, password=passwords)
+        user = authenticate(username=username, password=password)
 
         if user is not None:
             user_id_object = {"user_id": user.id}
@@ -43,7 +54,6 @@ class PingResultsSerializer(serializers.ModelSerializer):
 
     def save(self, validated_data, user_id, instance_id):
         user = User.objects.get(id=int(user_id))
-        print("data going in: ", validated_data)
         ping = PingResults.objects.create(user=user, instance=instance_id,
                                           min_ping=validated_data["min_ping"],
                                           max_ping=validated_data["max_ping"],

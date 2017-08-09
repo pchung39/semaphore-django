@@ -38,8 +38,7 @@ def signin(request):
         signin_form = UserSerializer()
         response = signin_form.signin(request.data)
         token = jwt.encode({'id': response["user_id"]}, SECRET_KEY, algorithm='HS256')
-        token_object = {"token": token.decode("utf-8")}
-        return Response({"token": token.decode("utf-8")}, status=status.HTTP_200_OK)
+        return JsonResponse({"token": token.decode("utf-8")}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def signup(request):
@@ -129,12 +128,9 @@ def get_all_or_post_instances(request):
     user_id = request.META.get('HTTP_AUTHORIZATION')
     if request.method == 'POST':
         try:
-            serializer = InstanceSerializer(user_id=user_id, instance=request.POST.get('instance', ''),
-                                            instance_provider=request.POST.get('instance_provider',''),
-                                            provider_service=request.POST.get('provider_service', ''))
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
+            instance_serializer = InstanceSerializer()
+            instance = instance_serializer.save(request.data, user_id)
+            return Response(instance, status=status.HTTP_200_OK)
         except:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
